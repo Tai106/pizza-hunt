@@ -24,15 +24,11 @@ const commentController = {
 
   // add reply to comment
   addReply({ params, body }, res) {
-    Comment.findOneAndUpdate({ _id: params.commentId }, { $push: { replies: body } }, { new: true })
-      .then(dbPizzaData => {
-        if (!dbPizzaData) {
-          res.status(404).json({ message: 'No pizza found with this id!' });
-          return;
-        }
-        res.json(dbPizzaData);
-      })
-      .catch(err => res.json(err));
+    Comment.findOneAndUpdate(
+      { _id: params.commentId },
+      { $push: { replies: body } },
+      { new: true, runValidators: true }
+    )
   },
 
   // remove comment
@@ -68,5 +64,6 @@ const commentController = {
       .catch(err => res.json(err));
   }
 };
+
 
 module.exports = commentController;
